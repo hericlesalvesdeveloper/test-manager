@@ -2,7 +2,6 @@ package br.com.hericlesalves.testmanager.model.entity;
 
 import br.com.hericlesalves.testmanager.model.enums.ChangePriority;
 import br.com.hericlesalves.testmanager.model.enums.*;
-import ch.qos.logback.core.model.processor.ChainedModelFilter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package br.com.hericlesalves.testmanager.dto;
+package br.com.hericlesalves.testmanager.dto.changeDto;
 
 import br.com.hericlesalves.testmanager.model.enums.ChangePriority;
 import lombok.Getter;

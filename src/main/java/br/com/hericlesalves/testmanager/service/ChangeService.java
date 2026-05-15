@@ -1,13 +1,12 @@
 package br.com.hericlesalves.testmanager.service;
 
-import br.com.hericlesalves.testmanager.dto.CreateChangeDto;
-import br.com.hericlesalves.testmanager.dto.ResponseChangeDto;
+import br.com.hericlesalves.testmanager.dto.changeDto.CreateChangeDto;
+import br.com.hericlesalves.testmanager.dto.changeDto.ResponseChangeDto;
 import br.com.hericlesalves.testmanager.exceptions.NotFoundException;
 import br.com.hericlesalves.testmanager.model.entity.ChangeEntity;
 import br.com.hericlesalves.testmanager.repository.ChangeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service

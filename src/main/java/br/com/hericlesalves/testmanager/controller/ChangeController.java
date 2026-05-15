@@ -1,7 +1,7 @@
 package br.com.hericlesalves.testmanager.controller;
 
-import br.com.hericlesalves.testmanager.dto.CreateChangeDto;
-import br.com.hericlesalves.testmanager.dto.ResponseChangeDto;
+import br.com.hericlesalves.testmanager.dto.changeDto.CreateChangeDto;
+import br.com.hericlesalves.testmanager.dto.changeDto.ResponseChangeDto;
 import br.com.hericlesalves.testmanager.exceptions.NotFoundException;
 import br.com.hericlesalves.testmanager.service.ChangeService;
 import org.springframework.beans.factory.annotation.Autowired;
