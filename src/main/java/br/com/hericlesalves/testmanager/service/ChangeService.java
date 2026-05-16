@@ -41,8 +41,20 @@ public class ChangeService {
                 )).toList();
     }
 
-    public ChangeEntity findChangeById(long id) {
-        return repository.findById(id).orElse(null);
+    public ResponseChangeDto findChangeById(long id) throws NotFoundException {
+        var entity = repository.findById(id).orElse(null);
+
+        if(entity == null) {
+            throw new NotFoundException("Change not found");
+        }
+
+        return new ResponseChangeDto(
+                entity.getName().trim(),
+                entity.getDescription().trim(),
+                entity.getClient().trim(),
+                entity.getPriority(),
+                entity.getStatus()
+        );
     }
 
     public void create(CreateChangeDto changeDto) {
