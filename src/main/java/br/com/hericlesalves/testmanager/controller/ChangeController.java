@@ -39,25 +39,25 @@ public class ChangeController {
         changeService.deleteChange(id);
     }
 
-    @PutMapping("pause/{id}")
+    @PatchMapping("pause/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void pauseChange(@PathVariable long id) throws NotFoundException {
         changeService.pauseChange(id);
     }
 
-    @PutMapping("start/{id}")
+    @PatchMapping("start/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void startChange(@PathVariable long id) throws NotFoundException {
         changeService.startChange(id);
     }
 
-    @PutMapping("done/{id}")
+    @PatchMapping("done/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void doneChange(@PathVariable long id) throws NotFoundException {
         changeService.doneChange(id);
     }
 
-    @PutMapping("close/{id}")
+    @PatchMapping("close/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void closeChange(@PathVariable long id) throws NotFoundException {
         changeService.closeChange(id);
