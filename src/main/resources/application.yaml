@@ -3,9 +3,9 @@ spring:
     name: TestManager
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/testManager
-    username: postgres
-    password: gato$2026
+    url: ${DATABASE_URL}
+    username: ${USER}
+    password: ${PASSWORD}
 
   jpa:
     hibernate:
