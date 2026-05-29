@@ -24,6 +24,5 @@ public class ResponseTestCaseDto {
         this.title = title;
         this.steps = steps;
         this.expectedResult = expectedResult;
-
     }
 }
