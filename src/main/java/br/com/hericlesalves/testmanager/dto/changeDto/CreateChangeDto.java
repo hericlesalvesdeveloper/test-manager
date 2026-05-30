@@ -1,15 +1,20 @@
 package br.com.hericlesalves.testmanager.dto.changeDto;
 
 import br.com.hericlesalves.testmanager.model.enums.ChangePriority;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-@Getter
-@Setter
-public class CreateChangeDto
+public record CreateChangeDto(
+        @NotBlank
+        String name,
+
+        @NotBlank
+        String description,
+
+        @NotBlank
+        String client,
+
+        @NotNull
+        ChangePriority priority)
 {
-    private String name;
-    private String description;
-    private String client;
-    private ChangePriority priority;
 }

@@ -36,9 +36,9 @@ public class TestCaseService {
 
         TestCaseEntity testCase = new TestCaseEntity(
 
-                createTestCaseDto.getTitle(),
-                createTestCaseDto.getSteps(),
-                createTestCaseDto.getExpectedResult()
+                createTestCaseDto.title(),
+                createTestCaseDto.steps(),
+                createTestCaseDto.expectedResult()
         );
 
         if (repository.existsByTitle(testCase.getTitle().trim()) != null) {

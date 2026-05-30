@@ -1,15 +1,13 @@
 package br.com.hericlesalves.testmanager.dto.bugDto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
 
-@Getter
-public class CreateBugDto {
+public record CreateBugDto(
+        @NotBlank
+        String description,
 
-    @NotNull
-    private String description;
-
-    @NotNull
-    private Long changeId;
+        @NotNull
+        Long changeId) {
 
 }

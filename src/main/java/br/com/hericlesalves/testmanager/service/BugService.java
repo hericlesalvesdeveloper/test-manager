@@ -22,11 +22,11 @@ public class BugService {
     }
 
     public void create(CreateBugDto bugDto) throws NotFoundException {
-        ChangeEntity change = changeRepository.findById(bugDto.getChangeId())
+        ChangeEntity change = changeRepository.findById(bugDto.changeId())
                 .orElseThrow(() -> new NotFoundException("Change not found!"));
 
         BugEntity bugEntity = new BugEntity(
-                bugDto.getDescription(),
+                bugDto.description(),
                 change
         );
 

@@ -60,10 +60,10 @@ public class ChangeService {
     public void create(CreateChangeDto changeDto) {
 
         ChangeEntity change = new ChangeEntity(
-                changeDto.getName(),
-                changeDto.getClient(),
-                changeDto.getDescription(),
-                changeDto.getPriority()
+                changeDto.name(),
+                changeDto.client(),
+                changeDto.description(),
+                changeDto.priority()
         );
 
         change.changeCreated();
