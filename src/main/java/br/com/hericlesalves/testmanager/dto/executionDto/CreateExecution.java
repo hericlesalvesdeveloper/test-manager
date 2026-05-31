@@ -4,8 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record CreateExecution(
         @NotNull
-        Long testCaseid,
-
+        Long testCaseId,
         @NotNull
         Long changeId
 ) {

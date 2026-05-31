@@ -4,6 +4,7 @@ import br.com.hericlesalves.testmanager.dto.bugDto.CreateBugDto;
 import br.com.hericlesalves.testmanager.dto.bugDto.ResponseBugDto;
 import br.com.hericlesalves.testmanager.exceptions.NotFoundException;
 import br.com.hericlesalves.testmanager.service.BugService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class BugController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody CreateBugDto dto) throws NotFoundException {
+    public void create(@RequestBody @Valid CreateBugDto dto) throws NotFoundException {
         service.create(dto);
     }
 

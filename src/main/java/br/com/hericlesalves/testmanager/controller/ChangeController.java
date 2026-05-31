@@ -4,6 +4,7 @@ import br.com.hericlesalves.testmanager.dto.changeDto.CreateChangeDto;
 import br.com.hericlesalves.testmanager.dto.changeDto.ResponseChangeDto;
 import br.com.hericlesalves.testmanager.exceptions.NotFoundException;
 import br.com.hericlesalves.testmanager.service.ChangeService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class ChangeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody CreateChangeDto change) {
+    public void create(@RequestBody @Valid CreateChangeDto change) {
         changeService.create(change);
     }
 

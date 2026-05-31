@@ -30,7 +30,7 @@ public class ExecutionService {
     public void create(CreateExecution execution) throws NotFoundException {
 
         TestCaseEntity testCase =
-                testCaseRepository.findById(execution.testCaseid())
+                testCaseRepository.findById(execution.testCaseId())
                         .orElseThrow(() -> new NotFoundException("Test case not found"));
 
         ChangeEntity change =

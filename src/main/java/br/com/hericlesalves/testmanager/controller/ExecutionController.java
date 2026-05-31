@@ -4,6 +4,7 @@ import br.com.hericlesalves.testmanager.dto.executionDto.CreateExecution;
 import br.com.hericlesalves.testmanager.dto.executionDto.ResponseExecution;
 import br.com.hericlesalves.testmanager.exceptions.NotFoundException;
 import br.com.hericlesalves.testmanager.service.ExecutionService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class ExecutionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody CreateExecution execution) throws NotFoundException {
+    public void create(@RequestBody @Valid CreateExecution execution) throws NotFoundException {
         service.create(execution);
     }
 
