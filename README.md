@@ -1,0 +1,180 @@
+Checklist
+
+- [x] Analisar código (controllers, services, repositories, entidades, DTOs, configurações)
+- [x] Extrair funcionalidades existentes e endpoints expostos
+- [x] Documentar arquitetura, tecnologias e como executar localmente
+- [x] Sinalizar pontos não determináveis e potenciais melhorias
+
+README - Test Manager
+
+1. Visão geral do projeto
+
+O Test Manager é uma aplicação backend desenvolvida em Java com Spring Boot para gerenciar casos de teste, execuções de teste e bugs associados a execuções. O projeto foi criado como estudo de caso e portfólio para demonstrar conhecimentos em desenvolvimento Backend Java.
+
+2. Objetivo da aplicação
+
+Fornecer uma API REST simples que permita cadastrar e gerenciar:
+- Casos de teste (Test Cases)
+- Mudanças/épicos/itens de trabalho (Changes)
+- Execuções de teste (Executions)
+- Bugs gerados a partir das execuções (Bugs)
+
+O objetivo é simular um fluxo de QA/Dev para validar conceitos de modelagem, validação, camadas e controle de versão do banco (Flyway).
+
+3. Tecnologias utilizadas
+
+- Java 17
+- Spring Boot (versão definida em `pom.xml`)
+- Spring Data JPA
+- Hibernate
+- PostgreSQL (driver presente em `pom.xml`)
+- Flyway (configurado no `application.yaml`)
+- Jakarta Validation (Bean Validation)
+- Lombok (uso em entidades e classes auxiliares)
+- Git Flow (fluxo de trabalho adotado - informação do autor)
+
+4. Arquitetura do projeto
+
+Arquitetura em camadas clássica:
+- Controller (camada de entrada HTTP) — pacotes: `controller`
+- Service (lógica de negócio) — pacotes: `service`
+- Repository (persistência) — pacotes: `repository`
+- Model/Entity (JPA) — pacotes: `model.entity` e `model.enums`
+- DTOs (Java Records) — pacotes: `dto.*`
+- Tratamento global de exceções — `handler.GlobalExceptionHandler`
+
+O projeto usa DTOs implementados como Java Records para entrada e saída de dados e validação via anotações Jakarta (`@NotBlank`, `@NotNull`).
+
+5. Funcionalidades implementadas (endpoints expostos)
+
+Observação: todos os endpoints estão prefixados por `v1/` conforme anotação em cada controller.
+
+- Test Cases (`TestCaseController` — `v1/tests`)
+  - GET `v1/tests` — lista todos os casos de teste ativos (retorna lista de `ResponseTestCaseDto`)
+  - GET `v1/tests/title?title={title}` — busca caso de teste por título (retorna `ResponseTestCaseDto`)
+  - GET `v1/tests/{id}` — busca caso de teste por id (retorna `ResponseTestCaseDto`)
+  - POST `v1/tests` — cria um novo caso de teste (body: `CreateTestCaseDto`)
+    - `CreateTestCaseDto` fields: `title` (String, @NotBlank), `expectedResult` (String, @NotBlank), `steps` (String, @NotBlank)
+  - DELETE `v1/tests/{id}` — marca o caso como deletado (soft delete, popula `deletedAt`)
+
+- Changes (`ChangeController` — `v1/changes`)
+  - GET `v1/changes` — lista changes ativos (retorna lista de `ResponseChangeDto`)
+  - GET `v1/changes/name?name={name}` — busca por nome (retorna lista de `ResponseChangeDto`)
+  - POST `v1/changes` — cria uma change (body: `CreateChangeDto`)
+    - `CreateChangeDto` fields: `name` (String, @NotBlank), `description` (String, @NotBlank), `client` (String, @NotBlank), `priority` (enum `ChangePriority`, @NotNull)
+  - DELETE `v1/changes/{id}` — soft delete (marca `deletedAt`)
+  - PATCH `v1/changes/start/{id}` — inicia a change (altera status para IN_PROGRESS)
+  - PATCH `v1/changes/pause/{id}` — pausa a change (altera status para PAUSED)
+  - PATCH `v1/changes/done/{id}` — finaliza a change (altera status para DONE)
+  - PATCH `v1/changes/close/{id}` — fecha a change (altera status para CLOSED)
+
+- Executions (`ExecutionController` — `v1/executions`)
+  - GET `v1/executions` — lista todas as execuções (retorna lista de `ResponseExecution`)
+  - POST `v1/executions` — cria uma execução (body: `CreateExecution` com `testCaseId` e `changeId`)
+  - PATCH `v1/executions/{id}/sucess` — marca execução como PASS
+    - Observação: o mapeamento contém a rota `sucess` (possível erro de digitação; esperado `success`).
+  - PATCH `v1/executions/{id}/fail` — marca execução como FAIL
+
+- Bugs (`BugController` — `v1/bugs`)
+  - GET `v1/bugs` — lista todos os bugs (retorna lista `ResponseBugDto`)
+  - POST `v1/bugs` — cria um bug (body: `CreateBugDto` com `description` e `changeId`)
+  - PATCH `v1/bugs/{id}` — fecha o bug (altera status para CLOSED)
+
+6. Estrutura de pastas (resumo)
+
+Raiz do projeto (caminhos relevantes):
+
+- `src/main/java/br/com/hericlesalves/testmanager/`
+  - `controller/` — controllers REST
+  - `service/` — regras de negócio
+  - `repository/` — interfaces JPA
+  - `model/entity/` — entidades JPA
+  - `model/enums/` — enums de domínio
+  - `dto/` — DTOs (Java Records)
+  - `handler/` — tratamento global de exceções
+  - `configuration/` — configuração (CORS)
+
+- `src/main/resources/` — recursos e configurações
+  - `application.yaml` — configurações de datasource, JPA e Flyway
+  - `db/migration/` — pasta de migrations Flyway (atualmente vazia)
+
+7. Banco de dados e migrations com Flyway
+
+- O `application.yaml` referencia variáveis de ambiente para conexão:
+  - `spring.datasource.url: ${DATABASE_URL}`
+  - `spring.datasource.username: ${USER}`
+  - `spring.datasource.password: ${PASSWORD}`
+
+- Observações importantes detectadas no código:
+  - `spring.jpa.hibernate.ddl-auto` está configurado como `validate`. Isso significa que o esquema do banco deve existir e ser compatível com as entidades JPA antes da aplicação iniciar.
+  - Flyway está habilitado (`spring.flyway.baseline-on-migrate: true`), porém a pasta `src/main/resources/db/migration` está vazia — não há scripts SQL de migração fornecidos no repositório.
+
+Conclusão: antes de executar a aplicação localmente você deve prover o esquema do banco (criar as tabelas necessárias) ou adicionar scripts de migração Flyway. Sem isso, com `ddl-auto=validate`, a aplicação falhará ao validar o esquema.
+
+8. Como executar o projeto localmente
+
+Pré-requisitos:
+- Java 17
+- Maven (o projeto inclui `mvnw`/`mvnw.cmd` wrappers)
+- PostgreSQL em execução com um banco preparado (ou adicionar migrations Flyway)
+
+Exemplo (Windows PowerShell) — definir variáveis de ambiente e rodar a aplicação com o wrapper:
+
+```powershell
+$env:DATABASE_URL = 'jdbc:postgresql://localhost:5432/testmanager'
+$env:USER = 'postgres'
+$env:PASSWORD = 'postgres'
+
+# Rodar a aplicação
+.\mvnw.cmd spring-boot:run
+```
+
+Observação: substitua os valores pelo seu host/usuário/senha reais. Como `ddl-auto` está em `validate`, assegure-se de que o schema/tabelas existem ou crie as migrations.
+
+9. Variáveis de ambiente necessárias
+
+- `DATABASE_URL` — JDBC URL do PostgreSQL (ex.: `jdbc:postgresql://localhost:5432/testmanager`)
+- `USER` — usuário do banco
+- `PASSWORD` — senha do banco
+
+Se preferir, você pode usar arquivos de ambiente em ferramentas como Docker Compose ou variáveis do sistema.
+
+10. Principais conceitos aplicados
+
+- Arquitetura em camadas (Controller → Service → Repository)
+- DTOs com Java Records para payloads de entrada e saída
+- Validação de dados com Jakarta Validation (`@NotBlank`, `@NotNull`)
+- Modelagem de entidades JPA com relacionamentos (`@ManyToOne`, `@JoinColumn`)
+- Enum para representar estados (ChangeStatus, ChangePriority, ExecutionStatus, BugStatus)
+- Tratamento centralizado de exceções com `@RestControllerAdvice` em `handler.GlobalExceptionHandler`
+- Configuração de CORS global (`configuration.CorsConfiguration`)
+- Controle de versão do banco com Flyway (configuração presente, mas sem scripts)
+
+11. Possíveis melhorias futuras (sugestões profissionais)
+
+- Adicionar scripts de migração Flyway (`V1__create_tables.sql`, etc.) para permitir `ddl-auto=validate` e um deploy reprodutível.
+- Corrigir pequenas inconsistências e bugs detectados no código:
+  - `ExecutionController` mapeia PATCH em `/sucess` (provável typo; deveria ser `/success`).
+  - `GlobalExceptionHandler.handlerGenericException` constrói um `ErrorResponse` com status `INTERNAL_SERVER_ERROR` mas retorna `NOT_FOUND` — ajustar o código para retornar `INTERNAL_SERVER_ERROR`.
+  - Verificar `TestCaseRepository.likeByTitle` — a assinatura do parâmetro do `@Query` usa `:title` porém o `@Param` é chamado `name` (possível inconsistência).
+- Adicionar testes unitários e de integração para controllers e serviços (ex.: MockMvc, testes com banco em memória ou Testcontainers).
+- Documentar a API com OpenAPI/Swagger (ex.: `springdoc-openapi`) para facilitar avaliação por recrutadores e uso por frontend.
+- Padronizar mensagens de erro e estruturas de resposta de erro (adicionar `timestamp`, `path`, `errors[]`).
+- Melhorar cobertura de DTOs/Responses incluindo IDs em respostas quando interessante (ex.: ao criar recursos retornar `201 Created` com `Location`).
+
+12. Considerações finais
+
+Este projeto apresenta uma base bem estruturada para um portfólio de desenvolvedor Backend Java Júnior: aplica camadas, DTOs modernos (Records), validação e uso de JPA/Hibernate. Para apresentação a recrutadores e avaliadores técnicos, recomendo:
+
+- Incluir migrações Flyway (SQL) ou ajustar `ddl-auto` durante avaliação local (por exemplo `update` ou `create-drop` apenas em ambiente de desenvolvimento).
+- Corrigir pequenas inconsistências (typos e retornos de status no handler) e adicionar documentação automática (Swagger) para facilitar testes manuais por quem avalia.
+- Incluir exemplos de requisições (curl/Postman) e instruções de como popular dados de exemplo.
+
+Se desejar, posso:
+- Gerar exemplos de scripts Flyway (SQL) baseados nas entidades existentes;
+- Gerar especificação OpenAPI/Swagger automaticamente a partir dos controllers;
+- Corrigir os problemas detectados e adicionar testes de integração.
+
+---
+Arquivo principal da aplicação: `src/main/java/br/com/hericlesalves/testmanager/Application.java`
+

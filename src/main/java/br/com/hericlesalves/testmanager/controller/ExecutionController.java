@@ -29,7 +29,7 @@ public class ExecutionController {
         service.create(execution);
     }
 
-    @PatchMapping("{id}/sucess")
+    @PatchMapping("{id}/success")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void success(@PathVariable Long id) throws NotFoundException {
         service.successiveExecution(id);
