@@ -14,7 +14,7 @@ public interface TestCaseRepository extends JpaRepository<TestCaseEntity, Long> 
     List<TestCaseEntity> findAllActive();
 
     @Query("SELECT t FROM TestCaseEntity t WHERE t.title LIKE :title AND t.deletedAt IS NULL")
-    List<TestCaseEntity> likeByTitle(@Param("name") String name);
+    List<TestCaseEntity> likeByTitle(@Param("title") String title);
 
     @Query("SELECT t FROM TestCaseEntity t WHERE t.title = :title AND t.deletedAt IS NULL")
     TestCaseEntity existsByTitle(@Param("title") String title);
