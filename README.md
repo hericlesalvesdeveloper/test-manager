@@ -150,7 +150,7 @@ Se preferir, você pode usar arquivos de ambiente em ferramentas como Docker Com
 - Configuração de CORS global (`configuration.CorsConfiguration`)
 - Controle de versão do banco com Flyway (configuração presente, mas sem scripts)
 
-11. Possíveis melhorias futuras (sugestões profissionais)
+11. Possíveis melhorias futuras 
 
 - Adicionar scripts de migração Flyway (`V1__create_tables.sql`, etc.) para permitir `ddl-auto=validate` e um deploy reprodutível.
 - Corrigir pequenas inconsistências e bugs detectados no código:
@@ -162,19 +162,6 @@ Se preferir, você pode usar arquivos de ambiente em ferramentas como Docker Com
 - Padronizar mensagens de erro e estruturas de resposta de erro (adicionar `timestamp`, `path`, `errors[]`).
 - Melhorar cobertura de DTOs/Responses incluindo IDs em respostas quando interessante (ex.: ao criar recursos retornar `201 Created` com `Location`).
 
-12. Considerações finais
 
-Este projeto apresenta uma base bem estruturada para um portfólio de desenvolvedor Backend Java Júnior: aplica camadas, DTOs modernos (Records), validação e uso de JPA/Hibernate. Para apresentação a recrutadores e avaliadores técnicos, recomendo:
 
-- Incluir migrações Flyway (SQL) ou ajustar `ddl-auto` durante avaliação local (por exemplo `update` ou `create-drop` apenas em ambiente de desenvolvimento).
-- Corrigir pequenas inconsistências (typos e retornos de status no handler) e adicionar documentação automática (Swagger) para facilitar testes manuais por quem avalia.
-- Incluir exemplos de requisições (curl/Postman) e instruções de como popular dados de exemplo.
-
-Se desejar, posso:
-- Gerar exemplos de scripts Flyway (SQL) baseados nas entidades existentes;
-- Gerar especificação OpenAPI/Swagger automaticamente a partir dos controllers;
-- Corrigir os problemas detectados e adicionar testes de integração.
-
----
-Arquivo principal da aplicação: `src/main/java/br/com/hericlesalves/testmanager/Application.java`
 
