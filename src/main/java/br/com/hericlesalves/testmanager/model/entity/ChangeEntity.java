@@ -2,7 +2,6 @@ package br.com.hericlesalves.testmanager.model.entity;
 
 import br.com.hericlesalves.testmanager.model.enums.ChangePriority;
 import br.com.hericlesalves.testmanager.model.enums.*;
-import ch.qos.logback.core.model.processor.ChainedModelFilter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "change")
+@Table(name = "tb_change")
 public class ChangeEntity {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
@@ -45,7 +44,7 @@ public class ChangeEntity {
 
     public void delete()
     {
-        if(this.deletedAt != null && this.status == ChangeStatus.DONE) {
+        if(this.deletedAt != null || this.status == ChangeStatus.DONE) {
             throw new IllegalArgumentException("Change already deleted or change already finished");
         }
         this.deletedAt = LocalDateTime.now();
@@ -92,7 +91,7 @@ public class ChangeEntity {
 
     public void closeChange() {
         ensureNotDeleted();
-        if(this.status != ChangeStatus.DONE || this.status != ChangeStatus.OPEN) {
+        if(this.status != ChangeStatus.DONE && this.status != ChangeStatus.OPEN) {
             throw new IllegalStateException("To close a change, its status must be open or done.");
         }
 

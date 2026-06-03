@@ -1,13 +1,12 @@
 package br.com.hericlesalves.testmanager.service;
 
-import br.com.hericlesalves.testmanager.dto.CreateChangeDto;
-import br.com.hericlesalves.testmanager.dto.ResponseChangeDto;
+import br.com.hericlesalves.testmanager.dto.changeDto.CreateChangeDto;
+import br.com.hericlesalves.testmanager.dto.changeDto.ResponseChangeDto;
 import br.com.hericlesalves.testmanager.exceptions.NotFoundException;
 import br.com.hericlesalves.testmanager.model.entity.ChangeEntity;
 import br.com.hericlesalves.testmanager.repository.ChangeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -42,17 +41,29 @@ public class ChangeService {
                 )).toList();
     }
 
-    public ChangeEntity findChangeById(long id) {
-        return repository.findById(id).orElse(null);
+    public ResponseChangeDto findChangeById(long id) throws NotFoundException {
+        var entity = repository.findById(id).orElse(null);
+
+        if(entity == null) {
+            throw new NotFoundException("Change not found");
+        }
+
+        return new ResponseChangeDto(
+                entity.getName().trim(),
+                entity.getDescription().trim(),
+                entity.getClient().trim(),
+                entity.getPriority(),
+                entity.getStatus()
+        );
     }
 
     public void create(CreateChangeDto changeDto) {
 
         ChangeEntity change = new ChangeEntity(
-                changeDto.getName(),
-                changeDto.getClient(),
-                changeDto.getDescription(),
-                changeDto.getPriority()
+                changeDto.name(),
+                changeDto.client(),
+                changeDto.description(),
+                changeDto.priority()
         );
 
         change.changeCreated();

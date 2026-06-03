@@ -1,10 +1,10 @@
 package br.com.hericlesalves.testmanager.controller;
 
-import br.com.hericlesalves.testmanager.dto.CreateChangeDto;
-import br.com.hericlesalves.testmanager.dto.ResponseChangeDto;
+import br.com.hericlesalves.testmanager.dto.changeDto.CreateChangeDto;
+import br.com.hericlesalves.testmanager.dto.changeDto.ResponseChangeDto;
 import br.com.hericlesalves.testmanager.exceptions.NotFoundException;
 import br.com.hericlesalves.testmanager.service.ChangeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -13,8 +13,11 @@ import java.util.List;
 @RequestMapping("v1/changes")
 public class ChangeController {
 
-    @Autowired
-    private ChangeService changeService;
+    private final ChangeService changeService;
+
+    public ChangeController(ChangeService changeService) {
+        this.changeService = changeService;
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -29,7 +32,7 @@ public class ChangeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody CreateChangeDto change) {
+    public void create(@RequestBody @Valid CreateChangeDto change) {
         changeService.create(change);
     }
 
@@ -39,25 +42,25 @@ public class ChangeController {
         changeService.deleteChange(id);
     }
 
-    @PutMapping("pause/{id}")
+    @PatchMapping("pause/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void pauseChange(@PathVariable long id) throws NotFoundException {
         changeService.pauseChange(id);
     }
 
-    @PutMapping("start/{id}")
+    @PatchMapping("start/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void startChange(@PathVariable long id) throws NotFoundException {
         changeService.startChange(id);
     }
 
-    @PutMapping("done/{id}")
+    @PatchMapping("done/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void doneChange(@PathVariable long id) throws NotFoundException {
         changeService.doneChange(id);
     }
 
-    @PutMapping("close/{id}")
+    @PatchMapping("close/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void closeChange(@PathVariable long id) throws NotFoundException {
         changeService.closeChange(id);
