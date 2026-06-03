@@ -25,8 +25,12 @@ public class BugEntity {
     private ChangeEntity change;
 
     public BugEntity(String description, ChangeEntity change) {
+        if(change == null) {
+            throw new IllegalArgumentException("Change is required");
+        }
         this.description = description;
         this.status = BugStatus.OPEN;
+        this.change = change;
     }
 
     public void close() {
