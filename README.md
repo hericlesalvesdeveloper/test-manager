@@ -71,7 +71,7 @@ Observação: todos os endpoints estão prefixados por `v1/` conforme anotação
 - Executions (`ExecutionController` — `v1/executions`)
   - GET `v1/executions` — lista todas as execuções (retorna lista de `ResponseExecution`)
   - POST `v1/executions` — cria uma execução (body: `CreateExecution` com `testCaseId` e `changeId`)
-  - PATCH `v1/executions/{id}/sucess` — marca execução como PASS
+  - PATCH `v1/executions/{id}/success` — marca execução como PASS
     - Observação: o mapeamento contém a rota `sucess` (possível erro de digitação; esperado `success`).
   - PATCH `v1/executions/{id}/fail` — marca execução como FAIL
 
@@ -96,7 +96,7 @@ Raiz do projeto (caminhos relevantes):
 
 - `src/main/resources/` — recursos e configurações
   - `application.yaml` — configurações de datasource, JPA e Flyway
-  - `db/migration/` — pasta de migrations Flyway (atualmente vazia)
+  - `db/migration/` — pasta de migrations Flyway (contém `V1__create_tables.sql`)
 
 7. Banco de dados e migrations com Flyway
 
@@ -105,9 +105,10 @@ Raiz do projeto (caminhos relevantes):
   - `spring.datasource.username: ${USER}`
   - `spring.datasource.password: ${PASSWORD}`
 
-- Observações importantes detectadas no código:
+- Observações importantes:
   - `spring.jpa.hibernate.ddl-auto` está configurado como `validate`. Isso significa que o esquema do banco deve existir e ser compatível com as entidades JPA antes da aplicação iniciar.
-  - Flyway está habilitado (`spring.flyway.baseline-on-migrate: true`), porém a pasta `src/main/resources/db/migration` está vazia — não há scripts SQL de migração fornecidos no repositório.
+  - Flyway está habilitado (`spring.flyway.baseline-on-migrate: true`) e o repositório agora inclui um script de migração inicial `src/main/resources/db/migration/V1__create_tables.sql`.
+  - Observação sobre comportamento: se o banco já existir (contendo as tabelas), com `baseline-on-migrate: true` o Flyway fará baseline e NÃO aplicará o `V1` nesse banco existente (evitando recriar objetos). Em um schema vazio o `V1` será aplicado normalmente para criar as tabelas.
 
 Conclusão: antes de executar a aplicação localmente você deve prover o esquema do banco (criar as tabelas necessárias) ou adicionar scripts de migração Flyway. Sem isso, com `ddl-auto=validate`, a aplicação falhará ao validar o esquema.
 
@@ -116,52 +117,4 @@ Conclusão: antes de executar a aplicação localmente você deve prover o esque
 Pré-requisitos:
 - Java 17
 - Maven (o projeto inclui `mvnw`/`mvnw.cmd` wrappers)
-- PostgreSQL em execução com um banco preparado (ou adicionar migrations Flyway)
-
-Exemplo (Windows PowerShell) — definir variáveis de ambiente e rodar a aplicação com o wrapper:
-
-```powershell
-$env:DATABASE_URL = 'jdbc:postgresql://localhost:5432/testmanager'
-$env:USER = 'postgres'
-$env:PASSWORD = 'postgres'
-
-# Rodar a aplicação
-.\mvnw.cmd spring-boot:run
-```
-
-Observação: substitua os valores pelo seu host/usuário/senha reais. Como `ddl-auto` está em `validate`, assegure-se de que o schema/tabelas existem ou crie as migrations.
-
-9. Variáveis de ambiente necessárias
-
-- `DATABASE_URL` — JDBC URL do PostgreSQL (ex.: `jdbc:postgresql://localhost:5432/testmanager`)
-- `USER` — usuário do banco
-- `PASSWORD` — senha do banco
-
-Se preferir, você pode usar arquivos de ambiente em ferramentas como Docker Compose ou variáveis do sistema.
-
-10. Principais conceitos aplicados
-
-- Arquitetura em camadas (Controller → Service → Repository)
-- DTOs com Java Records para payloads de entrada e saída
-- Validação de dados com Jakarta Validation (`@NotBlank`, `@NotNull`)
-- Modelagem de entidades JPA com relacionamentos (`@ManyToOne`, `@JoinColumn`)
-- Enum para representar estados (ChangeStatus, ChangePriority, ExecutionStatus, BugStatus)
-- Tratamento centralizado de exceções com `@RestControllerAdvice` em `handler.GlobalExceptionHandler`
-- Configuração de CORS global (`configuration.CorsConfiguration`)
-- Controle de versão do banco com Flyway (configuração presente, mas sem scripts)
-
-11. Possíveis melhorias futuras 
-
-- Adicionar scripts de migração Flyway (`V1__create_tables.sql`, etc.) para permitir `ddl-auto=validate` e um deploy reprodutível.
-- Corrigir pequenas inconsistências e bugs detectados no código:
-  - `ExecutionController` mapeia PATCH em `/sucess` (provável typo; deveria ser `/success`).
-  - `GlobalExceptionHandler.handlerGenericException` constrói um `ErrorResponse` com status `INTERNAL_SERVER_ERROR` mas retorna `NOT_FOUND` — ajustar o código para retornar `INTERNAL_SERVER_ERROR`.
-  - Verificar `TestCaseRepository.likeByTitle` — a assinatura do parâmetro do `@Query` usa `:title` porém o `@Param` é chamado `name` (possível inconsistência).
-- Adicionar testes unitários e de integração para controllers e serviços (ex.: MockMvc, testes com banco em memória ou Testcontainers).
-- Documentar a API com OpenAPI/Swagger (ex.: `springdoc-openapi`) para facilitar avaliação por recrutadores e uso por frontend.
-- Padronizar mensagens de erro e estruturas de resposta de erro (adicionar `timestamp`, `path`, `errors[]`).
-- Melhorar cobertura de DTOs/Responses incluindo IDs em respostas quando interessante (ex.: ao criar recursos retornar `201 Created` com `Location`).
-
-
-
-
+- PostgreSQL com um banco de dados criado para a aplicação
