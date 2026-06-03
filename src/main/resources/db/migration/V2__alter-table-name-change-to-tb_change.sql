@@ -1,1 +1,1 @@
-ALTER TABLE changes RENAME TO tb_change;
+ALTER TABLE change RENAME TO tb_change;
