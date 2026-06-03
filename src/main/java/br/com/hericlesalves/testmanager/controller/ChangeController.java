@@ -5,7 +5,6 @@ import br.com.hericlesalves.testmanager.dto.changeDto.ResponseChangeDto;
 import br.com.hericlesalves.testmanager.exceptions.NotFoundException;
 import br.com.hericlesalves.testmanager.service.ChangeService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -14,8 +13,11 @@ import java.util.List;
 @RequestMapping("v1/changes")
 public class ChangeController {
 
-    @Autowired
-    private ChangeService changeService;
+    private final ChangeService changeService;
+
+    public ChangeController(ChangeService changeService) {
+        this.changeService = changeService;
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

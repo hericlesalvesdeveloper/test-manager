@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "change")
+@Table(name = "tb_change")
 public class ChangeEntity {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
@@ -44,7 +44,7 @@ public class ChangeEntity {
 
     public void delete()
     {
-        if(this.deletedAt != null && this.status == ChangeStatus.DONE) {
+        if(this.deletedAt != null || this.status == ChangeStatus.DONE) {
             throw new IllegalArgumentException("Change already deleted or change already finished");
         }
         this.deletedAt = LocalDateTime.now();
@@ -91,7 +91,7 @@ public class ChangeEntity {
 
     public void closeChange() {
         ensureNotDeleted();
-        if(this.status != ChangeStatus.DONE || this.status != ChangeStatus.OPEN) {
+        if(this.status != ChangeStatus.DONE && this.status != ChangeStatus.OPEN) {
             throw new IllegalStateException("To close a change, its status must be open or done.");
         }
 

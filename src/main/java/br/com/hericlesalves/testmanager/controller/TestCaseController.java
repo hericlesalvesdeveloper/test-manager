@@ -5,7 +5,6 @@ import br.com.hericlesalves.testmanager.dto.testCaseDto.ResponseTestCaseDto;
 import br.com.hericlesalves.testmanager.exceptions.NotFoundException;
 import br.com.hericlesalves.testmanager.service.TestCaseService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -14,8 +13,11 @@ import java.util.List;
 @RequestMapping("v1/tests")
 public class TestCaseController {
 
-    @Autowired
-    private TestCaseService service;
+    private final TestCaseService service;
+
+    public TestCaseController(TestCaseService service) {
+        this.service = service;
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

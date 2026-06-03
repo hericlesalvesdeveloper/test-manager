@@ -73,7 +73,7 @@ public class TestCaseService {
             throw new NotFoundException("Test Case not found!");
         }
 
-        entity.deletedAt = LocalDateTime.now();
+        entity.delete();
 
         repository.save(entity);
     }

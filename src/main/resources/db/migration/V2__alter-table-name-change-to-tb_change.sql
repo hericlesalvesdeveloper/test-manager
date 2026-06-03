@@ -1,0 +1,1 @@
+ALTER TABLE change RENAME TO tb_change;

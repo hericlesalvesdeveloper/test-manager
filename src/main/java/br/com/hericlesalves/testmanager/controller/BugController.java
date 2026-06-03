@@ -5,7 +5,6 @@ import br.com.hericlesalves.testmanager.dto.bugDto.ResponseBugDto;
 import br.com.hericlesalves.testmanager.exceptions.NotFoundException;
 import br.com.hericlesalves.testmanager.service.BugService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -14,8 +13,11 @@ import java.util.List;
 @RequestMapping("v1/bugs")
 public class BugController {
 
-    @Autowired
-    private BugService service;
+    private final BugService service;
+
+    public BugController(BugService service) {
+        this.service = service;
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

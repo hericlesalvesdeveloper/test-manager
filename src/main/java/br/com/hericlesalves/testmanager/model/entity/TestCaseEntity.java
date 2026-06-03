@@ -3,6 +3,7 @@ package br.com.hericlesalves.testmanager.model.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
@@ -20,17 +21,22 @@ public class TestCaseEntity {
     private String title;
 
     @Column(nullable = false, length = 1000)
-    public String steps;
+    private String steps;
 
     @Column(nullable = false, length = 500)
-    public String expectedResult;
+    private String expectedResult;
 
     @Column(nullable = true)
-    public LocalDateTime deletedAt;
+    private LocalDateTime deletedAt;
 
     public TestCaseEntity(String title, String steps, String expectedResult) {
         this.title = title;
         this.steps = steps;
         this.expectedResult = expectedResult;
     }
+
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
 }
