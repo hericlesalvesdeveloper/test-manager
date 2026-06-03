@@ -14,8 +14,11 @@ import java.util.List;
 @RequestMapping("v1/tests")
 public class TestCaseController {
 
-    @Autowired
-    private TestCaseService service;
+    private final TestCaseService service;
+
+    public TestCaseController(TestCaseService service) {
+        this.service = service;
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

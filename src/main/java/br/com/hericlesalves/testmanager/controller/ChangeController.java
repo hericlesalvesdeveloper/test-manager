@@ -14,8 +14,11 @@ import java.util.List;
 @RequestMapping("v1/changes")
 public class ChangeController {
 
-    @Autowired
-    private ChangeService changeService;
+    private final ChangeService changeService;
+
+    public ChangeController(ChangeService changeService) {
+        this.changeService = changeService;
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

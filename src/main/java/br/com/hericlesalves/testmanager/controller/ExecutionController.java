@@ -14,8 +14,11 @@ import java.util.List;
 @RequestMapping("v1/executions")
 public class ExecutionController {
 
-    @Autowired
-    private ExecutionService service;
+    private final ExecutionService service;
+
+    public ExecutionController(ExecutionService service) {
+        this.service = service;
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
