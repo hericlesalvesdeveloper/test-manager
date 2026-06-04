@@ -87,7 +87,6 @@ Raiz do projeto (caminhos relevantes):
 - `src/main/resources/` — recursos e configurações
   - `application.yaml` — configurações de datasource, JPA e Flyway
   - `db/migration/` — pasta de migrations Flyway (contém `V1__create_tables.sql`)
-
 7. Banco de dados e migrations com Flyway
 
 - O `application.yaml` referencia variáveis de ambiente para conexão:
