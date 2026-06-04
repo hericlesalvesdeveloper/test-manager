@@ -1,12 +1,3 @@
-Checklist
-
-- [x] Analisar código (controllers, services, repositories, entidades, DTOs, configurações)
-- [x] Extrair funcionalidades existentes e endpoints expostos
-- [x] Documentar arquitetura, tecnologias e como executar localmente
-- [x] Sinalizar pontos não determináveis e potenciais melhorias
-
-README - Test Manager
-
 1. Visão geral do projeto
 
 O Test Manager é uma aplicação backend desenvolvida em Java com Spring Boot para gerenciar casos de teste, execuções de teste e bugs associados a execuções. O projeto foi criado como estudo de caso e portfólio para demonstrar conhecimentos em desenvolvimento Backend Java.
@@ -72,7 +63,6 @@ Observação: todos os endpoints estão prefixados por `v1/` conforme anotação
   - GET `v1/executions` — lista todas as execuções (retorna lista de `ResponseExecution`)
   - POST `v1/executions` — cria uma execução (body: `CreateExecution` com `testCaseId` e `changeId`)
   - PATCH `v1/executions/{id}/success` — marca execução como PASS
-    - Observação: o mapeamento contém a rota `sucess` (possível erro de digitação; esperado `success`).
   - PATCH `v1/executions/{id}/fail` — marca execução como FAIL
 
 - Bugs (`BugController` — `v1/bugs`)
