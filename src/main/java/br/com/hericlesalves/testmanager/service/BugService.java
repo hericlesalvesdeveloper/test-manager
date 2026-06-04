@@ -7,7 +7,10 @@ import br.com.hericlesalves.testmanager.model.entity.BugEntity;
 import br.com.hericlesalves.testmanager.model.entity.ChangeEntity;
 import br.com.hericlesalves.testmanager.repository.BugRepository;
 import br.com.hericlesalves.testmanager.repository.ChangeRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -33,17 +36,17 @@ public class BugService {
         bugRepository.save(bugEntity);
     }
 
-    public List<ResponseBugDto> listAll() throws NotFoundException {
-        var entity = bugRepository.findAll();
+    public Page<ResponseBugDto> listAll(Pageable pageable) throws NotFoundException {
+        var entity = bugRepository.findAll(pageable);
 
-        if(entity.isEmpty()) throw new NotFoundException("Bug not found");
+        if (entity.isEmpty()) throw new NotFoundException("Bug not found");
 
-        return entity.stream()
+        return entity
                 .map(bugEntity -> new ResponseBugDto(
                         bugEntity.getId(),
                         bugEntity.getDescription(),
                         bugEntity.getStatus()
-                )).toList();
+                ));
     }
 
     public void closeBug(Long id) throws NotFoundException {

@@ -5,9 +5,10 @@ import br.com.hericlesalves.testmanager.dto.executionDto.ResponseExecution;
 import br.com.hericlesalves.testmanager.exceptions.NotFoundException;
 import br.com.hericlesalves.testmanager.service.ExecutionService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("v1/executions")
@@ -21,8 +22,8 @@ public class ExecutionController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ResponseExecution> findAll() throws NotFoundException {
-        return service.allExecutions();
+    public Page<ResponseExecution> findAll(Pageable pageable) throws NotFoundException {
+        return service.allExecutions(pageable);
     }
 
     @PostMapping

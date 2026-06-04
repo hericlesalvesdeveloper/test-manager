@@ -9,6 +9,8 @@ import br.com.hericlesalves.testmanager.model.entity.TestCaseEntity;
 import br.com.hericlesalves.testmanager.repository.ChangeRepository;
 import br.com.hericlesalves.testmanager.repository.ExecutionRepository;
 import br.com.hericlesalves.testmanager.repository.TestCaseRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -61,16 +63,16 @@ public class ExecutionService {
         executionRepository.save(execution);
     }
 
-    public List<ResponseExecution> allExecutions() throws NotFoundException {
-        var entity = executionRepository.findAll();
+    public Page<ResponseExecution> allExecutions(Pageable pageable) throws NotFoundException {
+        var entity = executionRepository.findAll(pageable);
 
         if(entity.isEmpty()) throw new NotFoundException("Execution not found!");
 
-        return entity.stream()
+        return entity
                 .map(executionEntity -> new ResponseExecution(
                         executionEntity.getId(),
                         executionEntity.getStatus(),
                         executionEntity.getExecutedAt()
-                )).toList();
+                ));
     }
 }
