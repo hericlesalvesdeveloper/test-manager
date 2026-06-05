@@ -6,7 +6,10 @@ import br.com.hericlesalves.testmanager.exceptions.NotFoundException;
 import br.com.hericlesalves.testmanager.service.TestCaseService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import java.util.List;
 
 @RestController
@@ -39,8 +42,12 @@ public class TestCaseController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createTest(@RequestBody @Valid CreateTestCaseDto testCaseDto) {
-        service.create(testCaseDto);
+    public ResponseEntity<ResponseTestCaseDto> createTest(@RequestBody @Valid CreateTestCaseDto testCaseDto,
+                                                          UriComponentsBuilder componentsBuilder) {
+        var createdTest = service.create(testCaseDto);
+        var uri = componentsBuilder.path("v1/tests/{id}").buildAndExpand(createdTest.id()).toUri();
+
+        return ResponseEntity.created(uri).body(createdTest);
     }
 
     @DeleteMapping("{id}")

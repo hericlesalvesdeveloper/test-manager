@@ -8,7 +8,9 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("v1/executions")
@@ -28,8 +30,14 @@ public class ExecutionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody @Valid CreateExecution execution) throws NotFoundException {
-        service.create(execution);
+    public ResponseEntity<ResponseExecution> create(@RequestBody @Valid CreateExecution execution,
+                                                    UriComponentsBuilder componentsBuilder) throws NotFoundException {
+       var createdExecution = service.create(execution);
+
+        var uri = componentsBuilder.path("v1/executions/{id}").buildAndExpand(createdExecution.id()).toUri();
+
+        return ResponseEntity.created(uri).body(createdExecution);
+
     }
 
     @PatchMapping("{id}/success")

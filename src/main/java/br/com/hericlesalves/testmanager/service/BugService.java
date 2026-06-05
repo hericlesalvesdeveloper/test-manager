@@ -24,7 +24,7 @@ public class BugService {
         this.changeRepository = changeRepository;
     }
 
-    public void create(CreateBugDto bugDto) throws NotFoundException {
+    public ResponseBugDto create(CreateBugDto bugDto) throws NotFoundException {
         ChangeEntity change = changeRepository.findById(bugDto.changeId())
                 .orElseThrow(() -> new NotFoundException("Change not found!"));
 
@@ -33,7 +33,11 @@ public class BugService {
                 change
         );
 
-        bugRepository.save(bugEntity);
+         var savedBug = bugRepository.save(bugEntity);
+
+        return new ResponseBugDto(bugEntity.getId(),
+                savedBug.getDescription(),
+                savedBug.getStatus());
     }
 
     public Page<ResponseBugDto> listAll(Pageable pageable) throws NotFoundException {

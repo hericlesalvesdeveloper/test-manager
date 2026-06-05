@@ -6,7 +6,6 @@ import br.com.hericlesalves.testmanager.exceptions.NotFoundException;
 import br.com.hericlesalves.testmanager.model.entity.TestCaseEntity;
 import br.com.hericlesalves.testmanager.repository.TestCaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -25,13 +24,14 @@ public class TestCaseService {
 
         return entities.stream()
                 .map(testCase -> new ResponseTestCaseDto(
+                        testCase.getId(),
                         testCase.getTitle().trim(),
                         testCase.getExpectedResult().trim(),
                         testCase.getSteps().trim()
                 )).toList();
     }
 
-    public void create(CreateTestCaseDto createTestCaseDto) {
+    public ResponseTestCaseDto create(CreateTestCaseDto createTestCaseDto) {
 
         TestCaseEntity testCase = new TestCaseEntity(
 
@@ -44,11 +44,14 @@ public class TestCaseService {
             throw new IllegalArgumentException("There is already a record with this title");
         }
 
-        try {
-            repository.save(testCase);
-        } catch (DataIntegrityViolationException ex) {
-            throw new IllegalArgumentException("There is already a record with this title");
-        }
+        var savedTest = repository.save(testCase);
+
+        return new ResponseTestCaseDto(
+                savedTest.getId(),
+                savedTest.getTitle().trim(),
+                savedTest.getSteps().trim(),
+                savedTest.getExpectedResult().trim()
+        );
     }
 
     public ResponseTestCaseDto findById(Long id) throws NotFoundException {
@@ -59,6 +62,7 @@ public class TestCaseService {
         }
 
         return new ResponseTestCaseDto(
+                entity.getId(),
                 entity.getTitle().trim(),
                 entity.getSteps().trim(),
                 entity.getExpectedResult().trim()
@@ -86,6 +90,7 @@ public class TestCaseService {
 
         return entity.stream()
                 .map(testCase -> new ResponseTestCaseDto(
+                        testCase.getId(),
                         testCase.getTitle(),
                         testCase.getExpectedResult(),
                         testCase.getSteps()
@@ -100,6 +105,7 @@ public class TestCaseService {
         }
 
         return new ResponseTestCaseDto(
+                entity.getId(),
                 entity.getTitle(),
                 entity.getExpectedResult(),
                 entity.getSteps()
