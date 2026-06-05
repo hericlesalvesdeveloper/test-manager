@@ -100,8 +100,6 @@ Raiz do projeto (caminhos relevantes):
   - Flyway está habilitado (`spring.flyway.baseline-on-migrate: true`) e o repositório agora inclui um script de migração inicial `src/main/resources/db/migration/V1__create_tables.sql`.
   - Observação sobre comportamento: se o banco já existir (contendo as tabelas), com `baseline-on-migrate: true` o Flyway fará baseline e NÃO aplicará o `V1` nesse banco existente (evitando recriar objetos). Em um schema vazio o `V1` será aplicado normalmente para criar as tabelas.
 
-Conclusão: antes de executar a aplicação localmente você deve prover o esquema do banco (criar as tabelas necessárias) ou adicionar scripts de migração Flyway. Sem isso, com `ddl-auto=validate`, a aplicação falhará ao validar o esquema.
-
 8. Como executar o projeto localmente
 
 Pré-requisitos:
