@@ -20,6 +20,7 @@ public class ChangeService {
 
         return entities.stream()
                 .map(changeEntity -> new ResponseChangeDto(
+                        changeEntity.getId(),
                         changeEntity.getName(),
                         changeEntity.getNumberChange(),
                         changeEntity.getDescription(),
@@ -34,6 +35,7 @@ public class ChangeService {
 
         return entities.stream()
                 .map(changeEntity -> new ResponseChangeDto(
+                        changeEntity.getId(),
                         changeEntity.getName(),
                         changeEntity.getNumberChange(),
                         changeEntity.getDescription(),
@@ -51,6 +53,7 @@ public class ChangeService {
         }
 
         return new ResponseChangeDto(
+                entity.getId(),
                 entity.getName().trim(),
                 entity.getNumberChange(),
                 entity.getDescription().trim(),
@@ -60,7 +63,7 @@ public class ChangeService {
         );
     }
 
-    public void create(CreateChangeDto changeDto) {
+    public ResponseChangeDto create(CreateChangeDto changeDto) {
 
         ChangeEntity change = new ChangeEntity(
                 changeDto.numberChange(),
@@ -71,7 +74,17 @@ public class ChangeService {
         );
 
         change.changeCreated();
-        repository.save(change);
+        var savedChange = repository.save(change);
+
+        return new ResponseChangeDto(
+                savedChange.getId(),
+                savedChange.getName(),
+                savedChange.getNumberChange(),
+                savedChange.getDescription(),
+                savedChange.getClient(),
+                savedChange.getPriority(),
+                savedChange.getStatus()
+        );
     }
 
     public void deleteChange(long id) throws NotFoundException {

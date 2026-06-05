@@ -29,7 +29,7 @@ public class ExecutionService {
         this.executionRepository = executionRepository;
     }
 
-    public void create(CreateExecution execution) throws NotFoundException {
+    public ResponseExecution create(CreateExecution execution) throws NotFoundException {
 
         TestCaseEntity testCase =
                 testCaseRepository.findById(execution.testCaseId())
@@ -41,8 +41,13 @@ public class ExecutionService {
 
         ExecutionEntity executionEntity = new ExecutionEntity(testCase, change);
 
-        executionRepository.save(executionEntity);
+        var savedExecution = executionRepository.save(executionEntity);
 
+        return new ResponseExecution(
+                savedExecution.getId(),
+                savedExecution.getStatus(),
+                savedExecution.getExecutedAt()
+        );
     }
 
     public void successiveExecution(Long id) throws NotFoundException {
