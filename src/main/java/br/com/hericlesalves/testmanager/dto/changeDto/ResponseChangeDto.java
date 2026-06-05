@@ -5,6 +5,7 @@ import br.com.hericlesalves.testmanager.model.enums.ChangeStatus;
 
 public record ResponseChangeDto(
         String name,
+        Integer numberChange,
         String description,
         String client,
         ChangePriority priority,
