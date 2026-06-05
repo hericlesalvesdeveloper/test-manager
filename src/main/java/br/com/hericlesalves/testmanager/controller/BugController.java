@@ -8,7 +8,9 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("v1/bugs")
@@ -28,8 +30,13 @@ public class BugController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody @Valid CreateBugDto dto) throws NotFoundException {
-        service.create(dto);
+    public ResponseEntity<ResponseBugDto> create(@RequestBody @Valid CreateBugDto dto,
+                                                 UriComponentsBuilder componentsBuilder) throws NotFoundException {
+        var response = service.create(dto);
+
+        var uri = componentsBuilder.path("/v1/bugs/{id}").buildAndExpand(response.id()).toUri();
+
+        return ResponseEntity.created(uri).body(response);
     }
 
     @PatchMapping("{id}")

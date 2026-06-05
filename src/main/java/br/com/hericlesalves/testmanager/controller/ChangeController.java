@@ -6,7 +6,10 @@ import br.com.hericlesalves.testmanager.exceptions.NotFoundException;
 import br.com.hericlesalves.testmanager.service.ChangeService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import java.util.List;
 
 @RestController
@@ -32,8 +35,14 @@ public class ChangeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody @Valid CreateChangeDto change) {
-        changeService.create(change);
+    public ResponseEntity<ResponseChangeDto> create(@RequestBody @Valid CreateChangeDto change,
+                                 UriComponentsBuilder componentsBuilder) {
+
+       var savedChange = changeService.create(change);
+
+       var uri = componentsBuilder.path("/v1/changes/{id}").buildAndExpand(savedChange.id()).toUri();
+
+       return ResponseEntity.created(uri).body(savedChange);
     }
 
     @DeleteMapping("/{id}")
