@@ -1,0 +1,1 @@
+ALTER TABLE tb_change RENAME COLUMN change_number to number_change;

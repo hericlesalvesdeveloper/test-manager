@@ -3,6 +3,7 @@ package br.com.hericlesalves.testmanager.model.entity;
 import br.com.hericlesalves.testmanager.model.enums.ChangePriority;
 import br.com.hericlesalves.testmanager.model.enums.*;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,10 @@ public class ChangeEntity {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private long id;
+
+    @Column(nullable = false)
+    @NotNull
+    private Integer numberChange;
 
     @Column(nullable = false, length = 150)
     private String name;
@@ -35,7 +40,8 @@ public class ChangeEntity {
     @Column(nullable = true)
     private LocalDateTime deletedAt;
 
-    public ChangeEntity(String name, String client, String description, ChangePriority priority) {
+    public ChangeEntity(Integer numberChange, String name, String client, String description, ChangePriority priority) {
+        this.numberChange = numberChange;
         this.name = name;
         this.client = client;
         this.description = description;

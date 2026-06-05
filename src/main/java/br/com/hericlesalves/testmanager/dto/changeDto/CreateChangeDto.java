@@ -8,6 +8,9 @@ public record CreateChangeDto(
         @NotBlank
         String name,
 
+        @NotNull
+        Integer numberChange,
+
         @NotBlank
         String description,
 

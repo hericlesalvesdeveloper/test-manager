@@ -1,0 +1,1 @@
+ALTER TABLE tb_change ADD COLUMN change_number INTEGER NOT NULL DEFAULT 0;

@@ -21,6 +21,7 @@ public class ChangeService {
         return entities.stream()
                 .map(changeEntity -> new ResponseChangeDto(
                         changeEntity.getName(),
+                        changeEntity.getNumberChange(),
                         changeEntity.getDescription(),
                         changeEntity.getClient(),
                         changeEntity.getPriority(),
@@ -34,6 +35,7 @@ public class ChangeService {
         return entities.stream()
                 .map(changeEntity -> new ResponseChangeDto(
                         changeEntity.getName(),
+                        changeEntity.getNumberChange(),
                         changeEntity.getDescription(),
                         changeEntity.getClient(),
                         changeEntity.getPriority(),
@@ -50,6 +52,7 @@ public class ChangeService {
 
         return new ResponseChangeDto(
                 entity.getName().trim(),
+                entity.getNumberChange(),
                 entity.getDescription().trim(),
                 entity.getClient().trim(),
                 entity.getPriority(),
@@ -60,6 +63,7 @@ public class ChangeService {
     public void create(CreateChangeDto changeDto) {
 
         ChangeEntity change = new ChangeEntity(
+                changeDto.numberChange(),
                 changeDto.name(),
                 changeDto.client(),
                 changeDto.description(),
